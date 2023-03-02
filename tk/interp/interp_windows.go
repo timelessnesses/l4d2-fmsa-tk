@@ -13,6 +13,7 @@ import (
 	"os"
 	"syscall"
 	"unsafe"
+	"path/filepath"
 )
 
 //NOTE: BytePtrToString replace cgo C.GoStringN
@@ -96,6 +97,22 @@ func init() {
 	if err != nil {
 		modtcl86t.Name = "tcl86.dll"
 		modtk86t.Name = "tk86.dll"
+	}
+	// try load again
+	err = modtc86t.Load()
+	if err != nil {
+		// time to search where the program is 
+		exePath, err := os.Executable()
+		if err != nil {
+			panic("Failed to get executable path:"+ err.Error())
+			return
+		}
+		exeDir := filepath.Dir(exePath)
+		tkDll := filepath.Join(exeDir, "tk86.dll")
+		tclDll := filepath.Join(exeDir, "tcl86.dll")
+		modtcl86t.Name = tclDll
+		modtk86t.Name := tkDll
+		// should works!
 	}
 }
 
