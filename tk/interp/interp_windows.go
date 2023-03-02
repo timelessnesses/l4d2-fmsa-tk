@@ -110,8 +110,8 @@ func init() {
 		exeDir := filepath.Dir(exePath)
 		tkDll := filepath.Join(exeDir, "tk86.dll")
 		tclDll := filepath.Join(exeDir, "tcl86.dll")
-		modtcl86t.Name = tclDll
-		modtk86t.Name := tkDll
+		modtcl86t = syscall.NewLazyDLL(tclDll)
+		modtk86t = syscall.NewLazyDLL(tkDll)
 		// should works!
 	}
 }
